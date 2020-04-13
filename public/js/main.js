@@ -5,7 +5,19 @@ let isAlreadyCalling = false;
 let getCalled = false;
 
 const { RTCPeerConnection, RTCSessionDescription } = window;
-const peerConnection = new RTCPeerConnection();
+
+// TURN Server config for RTCPeerConnection
+const iceConfig = {
+  iceServers: [
+    {
+      urls: 'turn:numb.viagenie.ca',
+      credential: 'muazkh',
+      username: 'webrtc@live.com',
+    },
+  ],
+};
+
+const peerConnection = new RTCPeerConnection(iceConfig);
 
 // Get username from URL
 const { username } = Qs.parse(location.search, {
@@ -73,6 +85,7 @@ socket.on('callMade', async ({ offer, username, id }) => {
 
 // Answer made
 socket.on('answerMade', async ({ socket, answer }) => {
+  console.log('answer-id: ', socket);
   await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
   if (!isAlreadyCalling) {
     callUser(socket);
@@ -115,10 +128,10 @@ function unselectUsers() {
 }
 
 // Stream remote video
-peerConnection.ontrack = function ({ streams: [stream] }) {
+peerConnection.ontrack = function (event) {
   const remoteVideo = document.getElementById('remote-video');
   if (remoteVideo) {
-    remoteVideo.srcObject = stream;
+    remoteVideo.srcObject = event.streams[0];
   }
 };
 
