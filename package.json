@@ -10,8 +10,8 @@
   "author": "Ping Lu",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.19.2",
-    "socket.io": "^4.6.2"
+    "express": "^4.21.1",
+    "socket.io": "^4.8.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.3"
